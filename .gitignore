@@ -1,11 +1,5 @@
-# 1. Ignore everything
-*
 
-# 2. Un-ignore directories so git can traverse them.
-#    This is necessary so git can find the files to un-ignore below.
-!*/
-
-# 3. Un-ignore the allowed file extensions
+# 3. Un-ignore the required project file extensions
 !*.cpp
 !*.h
 !*.jpg
@@ -16,6 +10,20 @@
 !*.ans
 !*.md
 !*.txt
+!*.cs
+!*.xaml
+!*.csproj
+!*.sln
+!*.json
+!*.xml
+!*.config
+!*.ttf
+!*.svg
+
+# 4. Ignore build artifacts and Visual Studio files
+bin/
+obj/
+.vs/
 
 # 5. Un-ignore this file itself so it can be committed
 !/.gitignore

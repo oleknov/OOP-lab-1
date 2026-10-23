@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:SpreadsheetEditor.Views"
+             x:Class="SpreadsheetEditor.MainPage"
+             Title="Електронні таблиці">
+
+    <Grid>
+        <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="8" RowSpacing="8">
+
+            <FlexLayout Grid.Row="0" Wrap="Wrap" AlignItems="Center">
+                <Button Text="Нова таблиця"            Clicked="OnNewClicked"        Margin="2" />
+                <Button Text="Розмір таблиці"          Clicked="OnResizeClicked"     Margin="2" />
+                <Button Text="Відкрити"                Clicked="OnOpenClicked"       Margin="2" />
+                <Button Text="Нещодавні"               Clicked="OnOpenRecentClicked" Margin="2" />
+                <Button Text="Зберегти"                Clicked="OnSaveClicked"       Margin="2" />
+                <Button Text="Зберегти як…"            Clicked="OnSaveAsClicked"     Margin="2" />
+                <Button Text="Відкрити з Google Drive" Clicked="OnOpenDriveClicked"  Margin="2" />
+                <Button Text="Зберегти на Google Drive" Clicked="OnSaveDriveClicked" Margin="2" />
+                <Button x:Name="ModeButton"            Clicked="OnSwitchModeClicked" Margin="2" />
+                <Button Text="Довідка"                 Clicked="OnHelpClicked"       Margin="2" />
+            </FlexLayout>
+
+            <Border Grid.Row="1" Padding="10,6" Stroke="#B8C3D1" StrokeThickness="1" BackgroundColor="#F4F7FB">
+                <VerticalStackLayout Spacing="3">
+                    <Label x:Name="SelectedCellLabel" Text="Клітинка: —" FontAttributes="Bold" TextColor="#263238" />
+                    <Label x:Name="SelectedCellContentLabel" Text="Виберіть клітинку, щоб побачити її повний вміст." TextColor="#263238"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Border>
+
+            <ScrollView Grid.Row="2" Orientation="Both">
+                <Grid x:Name="TableGrid" ColumnSpacing="1" RowSpacing="1" HorizontalOptions="Start" VerticalOptions="Start" />
+            </ScrollView>
+
+            <Label Grid.Row="3" x:Name="StatusLabel" />
+        </Grid>
+
+        <views:SizeDialog x:Name="ResizeDialog" />
+    </Grid>
+</ContentPage>
