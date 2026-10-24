@@ -3,11 +3,6 @@ using SpreadsheetEditor.Services;
 using SpreadsheetEditor.Views;
 
 namespace SpreadsheetEditor;
-
-/// <summary>
-/// Подання (View): будує сітку, показує діалоги й передає дії моделі (Spreadsheet) та FileManager.
-/// Жодної логіки обчислень чи роботи з файлами тут немає — кожна кнопка робить одну окрему дію.
-/// </summary>
 public partial class MainPage : ContentPage
 {
     private const int DefaultSize = 10;
@@ -28,8 +23,6 @@ public partial class MainPage : ContentPage
         ModeButton.Text = ModeCaption();
         BuildGrid();
     }
-
-    // ---------- Кнопки ----------
 
     private async void OnNewClicked(object? sender, EventArgs e)
     {
@@ -200,7 +193,7 @@ public partial class MainPage : ContentPage
 
     private void OnCellEditingFinished(CellView view, int row, int column)
     {
-        if (!IsCurrent(view, row, column)) return; 
+        if (!IsCurrent(view, row, column)) return;
 
         if (editingView == view)
         {
@@ -212,8 +205,11 @@ public partial class MainPage : ContentPage
             table.SetCellExpression(row, column, view.Text);
 
         RefreshGrid();
-        UpdateSelectedCellPreview(row, column);
-        if (editingView is null) ShowStatus(row, column);
+        if (editingView is null)
+        {
+            UpdateSelectedCellPreview(row, column);
+            ShowStatus(row, column);
+        }
     }
 
     private void UpdateSelectedCellPreview(int row, int column, string? editingExpression = null)
