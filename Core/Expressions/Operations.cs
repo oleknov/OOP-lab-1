@@ -11,15 +11,16 @@ public sealed record UnaryOperation(string Symbol, Func<BigInteger, BigInteger> 
 
 public static class Operations
 {
+    private const int AddPriority = 1; 
+    private const int MultiplyPriority = 2;  
     public const int PowerPriority = 3;
-    public const int MaxExponent = 10_000;
 
     private static readonly Dictionary<string, BinaryOperation> Binary = new BinaryOperation[]
     {
-        new("+", 1, false, (a, b) => a + b),
-        new("-", 1, false, (a, b) => a - b),
-        new("*", 2, false, (a, b) => a * b),
-        new("/", 2, false, Divide),
+        new("+", AddPriority, false, (a, b) => a + b),
+        new("-", AddPriority, false, (a, b) => a - b),
+        new("*", MultiplyPriority, false, (a, b) => a * b),
+        new("/", MultiplyPriority, false, Divide),
         new("^", PowerPriority, true, Power),
     }.ToDictionary(o => o.Symbol);
 
@@ -48,14 +49,46 @@ public static class Operations
         Functions.TryGetValue(name, out operation);
 
     private static BigInteger Divide(BigInteger a, BigInteger b) =>
-        b.IsZero ? throw new ArithmeticException("ділення на нуль") : BigInteger.Divide(a, b);
+        b.IsZero ? throw new ArithmeticException("ділення на нуль") : RoundHalfUp(a, b);
 
     private static BigInteger Power(BigInteger value, BigInteger exponent)
     {
-        if (exponent.Sign < 0)
-            throw new ArithmeticException("від'ємний показник степеня");
-        if (exponent > MaxExponent)
-            throw new ArithmeticException($"показник степеня більший за {MaxExponent}");
-        return BigInteger.Pow(value, (int)exponent);
+        if (value.IsZero) return ZeroToPower(exponent);
+        if (value.IsOne) return BigInteger.One;
+        if (value == BigInteger.MinusOne) return exponent.IsEven ? BigInteger.One : BigInteger.MinusOne;
+
+        return exponent.Sign < 0
+            ? NegativePower(value, exponent)
+            : PositivePower(value, exponent);
+    }
+    private static BigInteger ZeroToPower(BigInteger exponent)
+    {
+        if (exponent.Sign < 0) throw new ArithmeticException("ділення на нуль");
+        return exponent.IsZero ? BigInteger.One : BigInteger.Zero;
+    }
+    private static BigInteger NegativePower(BigInteger value, BigInteger exponent)
+    {
+        if (BigInteger.Abs(value) > 2 || exponent < BigInteger.MinusOne) return BigInteger.Zero;
+        return RoundHalfUp(BigInteger.One, value);
+    }
+
+    private static BigInteger RoundHalfUp(BigInteger p, BigInteger q)
+    {
+        if (q.Sign < 0) { p = -p; q = -q; } 
+        BigInteger fraction = BigInteger.DivRem(2 * p + q, 2 * q, out var remainder);
+        return remainder.Sign < 0 ? fraction - 1 : fraction; 
+    }
+
+    private static BigInteger PositivePower(BigInteger value, BigInteger exponent)
+    {
+        const string TooBig = "результат завеликий, щоб поміститися в пам'ять";
+
+        if (exponent > int.MaxValue) throw new ArithmeticException(TooBig);
+
+        try { return BigInteger.Pow(value, (int)exponent); }
+        catch (Exception e) when (e is OverflowException or OutOfMemoryException)
+        {
+            throw new ArithmeticException(TooBig);
+        }
     }
 }

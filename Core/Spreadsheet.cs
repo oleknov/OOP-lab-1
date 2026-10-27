@@ -7,7 +7,7 @@ namespace SpreadsheetEditor.Core;
 
 public sealed class Spreadsheet : IValueProvider
 {
-    public const int MaxSize = 30;
+    public const int MaxSize = 100;
 
     private Cell[,] cells;
 
