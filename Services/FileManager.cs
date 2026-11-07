@@ -5,7 +5,7 @@ namespace SpreadsheetEditor.Services;
 
 public sealed class FileManager(IFileSystemService system, GoogleDriveService drive, RecentFileList recent)
 {
-    private const string Extension = ".sprd";
+    private const string Extension = ".json";
 
     public IReadOnlyList<string> RecentFiles => recent.GetAll();
 

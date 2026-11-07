@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace SpreadsheetEditor.Core.Expressions;
+namespace SpreadsheetEditor.Core.Tree;
 
 public interface IValueProvider
 {

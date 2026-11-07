@@ -1,23 +1,33 @@
+using Microsoft.Maui.Controls.Shapes;
+
 namespace SpreadsheetEditor.Views;
 
-/// <summary>Візуальна клітинка: поле вводу в рамці, яку можна підсвітити блакитним.</summary>
 public sealed class CellView : Border
 {
     private static readonly Color HighlightStroke = Color.FromArgb("#1E90FF");
     private static readonly Color HighlightFill = new(0.27f, 0.63f, 1f, 0.30f);
+    private static readonly Color NormalStroke = Color.FromArgb("#40808080");
 
-    private readonly Entry editor = new() { HorizontalTextAlignment = TextAlignment.Start };
+    private readonly Entry editor = new()
+    {
+        HorizontalTextAlignment = TextAlignment.Start,
+        VerticalTextAlignment = TextAlignment.Center
+    };
     private bool isHighlighted;
 
-    public CellView()
+    public CellView(double width, double height)
     {
-        Stroke = Colors.Transparent;
+        WidthRequest = width;
+        HeightRequest = height;
+        Stroke = NormalStroke;
+        StrokeShape = new RoundRectangle { CornerRadius = 3 };
         StrokeThickness = 2;
         Padding = 0;
         Content = editor;
 
         editor.Focused += (_, _) => EditingStarted?.Invoke();
         editor.Unfocused += (_, _) => EditingFinished?.Invoke();
+        editor.Completed += (_, _) => EditingFinished?.Invoke(); 
         editor.TextChanged += (_, e) =>
         {
             if (editor.IsFocused) TextEdited?.Invoke(e.NewTextValue ?? "");
@@ -36,7 +46,7 @@ public sealed class CellView : Border
         set { if (editor.Text != value) editor.Text = value; }
     }
 
-    /// <summary>Блакитна обводка й заливка: клітинка, на яку посилається вираз, що редагується.</summary>
+
     public bool IsHighlighted
     {
         get => isHighlighted;
@@ -45,16 +55,16 @@ public sealed class CellView : Border
             if (isHighlighted == value) return;
             isHighlighted = value;
 
-            Stroke = value ? HighlightStroke : Colors.Transparent;
+            Stroke = value ? HighlightStroke : NormalStroke;
             if (value) editor.BackgroundColor = HighlightFill;
             else editor.ClearValue(VisualElement.BackgroundColorProperty);
         }
     }
 
-    /// <summary>Показує текст і стиль помилки; змінює лише те, що справді змінилось.</summary>
+   
     public void Display(string text, bool isError)
     {
-        if (IsEditing) return; // не заважаємо введенню
+        if (IsEditing) return; 
 
         Text = text;
         if (isError)

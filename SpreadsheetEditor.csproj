@@ -23,6 +23,7 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+                <NoWarn>$(NoWarn);CS3021;CA1416</NoWarn>
 
 		<!-- Display name -->
 		<ApplicationTitle>SpreadsheetEditor</ApplicationTitle>
@@ -64,6 +65,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Antlr4" Version="4.6.6">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Antlr4.Runtime" Version="4.6.6" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
 		<PackageReference Include="Google.Apis.Drive.v3" Version="1.77.0.4301" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />

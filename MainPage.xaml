@@ -6,7 +6,7 @@
              Title="Електронні таблиці">
 
     <Grid>
-        <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" Padding="8" RowSpacing="8">
+        <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" Padding="8" RowSpacing="8">
 
             <FlexLayout Grid.Row="0" Wrap="Wrap" AlignItems="Center">
                 <Button Text="Нова таблиця"            Clicked="OnNewClicked"        Margin="2" />
@@ -17,6 +17,8 @@
                 <Button Text="Зберегти як…"            Clicked="OnSaveAsClicked"     Margin="2" />
                 <Button x:Name="ModeButton"            Clicked="OnSwitchModeClicked" Margin="2" />
                 <Button Text="Довідка"                 Clicked="OnHelpClicked"       Margin="2" />
+                <Button Text="Вийти"                   Clicked="OnExitClicked"       Margin="2"
+                 BackgroundColor="#C62828" TextColor="White" />
             </FlexLayout>
 
             <FlexLayout Grid.Row="1" Wrap="Wrap" AlignItems="Center">
@@ -26,19 +28,13 @@
                  BackgroundColor="#2F5278" TextColor="White" />
             </FlexLayout>
 
-            <Border Grid.Row="2" Padding="10,6" Stroke="#B8C3D1" StrokeThickness="1" BackgroundColor="#F4F7FB">
-                <VerticalStackLayout Spacing="3">
-                    <Label x:Name="SelectedCellLabel" Text="Клітинка: —" FontAttributes="Bold" TextColor="#263238" />
-                    <Label x:Name="SelectedCellContentLabel" Text="Виберіть клітинку, щоб побачити її повний вміст." TextColor="#263238"
-                           LineBreakMode="WordWrap" />
-                </VerticalStackLayout>
-            </Border>
+            <views:FormulaBar      Grid.Row="2" x:Name="FormulaBox" />
 
-            <ScrollView Grid.Row="3" Orientation="Both">
-                <Grid x:Name="TableGrid" ColumnSpacing="1" RowSpacing="1" HorizontalOptions="Start" VerticalOptions="Start" />
-            </ScrollView>
+            <views:SpreadsheetGrid Grid.Row="3" x:Name="CellsGrid" />
 
-            <Label Grid.Row="4" x:Name="StatusLabel" />
+            <views:ValuePanel      Grid.Row="4" x:Name="ValueBox" />
+
+            <Label Grid.Row="5" x:Name="StatusLabel" Opacity="0.75" />
         </Grid>
 
         <views:SizeDialog x:Name="ResizeDialog" />

@@ -1,4 +1,4 @@
-namespace SpreadsheetEditor.Core.Expressions;
+namespace SpreadsheetEditor.Core.Tree;
 
 public sealed class ExpressionException(int position, string description) : Exception(description)
 {

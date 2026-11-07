@@ -1,27 +1,23 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace SpreadsheetEditor.Core.Expressions;
+namespace SpreadsheetEditor.Core.Tree;
 
-public sealed record BinaryOperation(string Symbol, int Priority, bool RightAssociative,
-    Func<BigInteger, BigInteger, BigInteger> Apply);
+
+public sealed record BinaryOperation(string Symbol, Func<BigInteger, BigInteger, BigInteger> Apply);
 
 public sealed record UnaryOperation(string Symbol, Func<BigInteger, BigInteger> Apply);
 
 
 public static class Operations
 {
-    private const int AddPriority = 1; 
-    private const int MultiplyPriority = 2;  
-    public const int PowerPriority = 3;
-
     private static readonly Dictionary<string, BinaryOperation> Binary = new BinaryOperation[]
     {
-        new("+", AddPriority, false, (a, b) => a + b),
-        new("-", AddPriority, false, (a, b) => a - b),
-        new("*", MultiplyPriority, false, (a, b) => a * b),
-        new("/", MultiplyPriority, false, Divide),
-        new("^", PowerPriority, true, Power),
+        new("+", (a, b) => a + b),
+        new("-", (a, b) => a - b),
+        new("*", (a, b) => a * b),
+        new("/", Divide),
+        new("^", Power),
     }.ToDictionary(o => o.Symbol);
 
     private static readonly Dictionary<string, UnaryOperation> Prefix = new UnaryOperation[]
@@ -35,9 +31,6 @@ public static class Operations
         new("inc", a => a + 1),
         new("dec", a => a - 1),
     }.ToDictionary(o => o.Symbol, StringComparer.OrdinalIgnoreCase);
-
-    public static bool IsOperatorSymbol(char c) =>
-        Binary.ContainsKey(c.ToString()) || Prefix.ContainsKey(c.ToString());
 
     public static bool TryGetBinary(string symbol, [NotNullWhen(true)] out BinaryOperation? operation) =>
         Binary.TryGetValue(symbol, out operation);
@@ -74,9 +67,9 @@ public static class Operations
 
     private static BigInteger RoundHalfUp(BigInteger p, BigInteger q)
     {
-        if (q.Sign < 0) { p = -p; q = -q; } 
+        if (q.Sign < 0) { p = -p; q = -q; }
         BigInteger fraction = BigInteger.DivRem(2 * p + q, 2 * q, out var remainder);
-        return remainder.Sign < 0 ? fraction - 1 : fraction; 
+        return remainder.Sign < 0 ? fraction - 1 : fraction;
     }
 
     private static BigInteger PositivePower(BigInteger value, BigInteger exponent)

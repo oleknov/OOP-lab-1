@@ -1,6 +1,7 @@
+using SpreadsheetEditor.Core.Parser;
+using SpreadsheetEditor.Core.Tree;
 using System.Numerics;
-using SpreadsheetEditor.Core.Expressions;
-using IValueProvider = SpreadsheetEditor.Core.Expressions.IValueProvider;
+using IValueProvider = SpreadsheetEditor.Core.Tree.IValueProvider;
 
 namespace SpreadsheetEditor.Core;
 

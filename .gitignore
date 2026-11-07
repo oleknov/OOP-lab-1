@@ -17,6 +17,10 @@
 !*.ans
 !*.md
 !*.txt
+!*.g4
+!*.csproj
+!*.sln
+
 
 #4. Ignore specific package-related directories 
 #   of Visual Studio Maui creation

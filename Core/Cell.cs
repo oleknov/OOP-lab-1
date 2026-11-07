@@ -1,6 +1,8 @@
+using SpreadsheetEditor.Core.Parser;
+using SpreadsheetEditor.Core.Tree;
+using System.Globalization;
 using System.Numerics;
-using SpreadsheetEditor.Core.Expressions;
-using IValueProvider = SpreadsheetEditor.Core.Expressions.IValueProvider;
+using IValueProvider = SpreadsheetEditor.Core.Tree.IValueProvider;
 
 namespace SpreadsheetEditor.Core;
 
@@ -18,14 +20,14 @@ public sealed class Cell
     public ExpressionException? Error { get; private set; }
     public bool IsEmpty => string.IsNullOrWhiteSpace(Expression);
 
-    private string ValueText => valueText ??= Value.ToString();
+    private string ValueText => valueText ??= Value.ToString(CultureInfo.InvariantCulture);
 
     internal bool IsCalculating => state == CalcState.InProgress;
 
     public string GetDisplayText(ViewMode mode) => mode switch
     {
         ViewMode.Expression => Expression,
-        _ => Error is not null ? "#ПОМИЛКА" : IsEmpty ? "" : ValueText
+        _ => Error is not null ? "#ПОМИЛКА" : IsEmpty ? "" : NumberFormatter.Compact(ValueText)
     };
 
     internal void Define(string expression)
@@ -60,4 +62,6 @@ public sealed class Cell
         catch (ExpressionException e) { Error = e; }
         state = CalcState.Done;
     }
+
+    public string FullValue => IsEmpty || Error is not null ? "" : ValueText;
 }
